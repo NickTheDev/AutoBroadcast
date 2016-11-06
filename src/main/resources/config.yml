@@ -1,0 +1,25 @@
+#Format used when a player uses /broadcast. Placeholders are <message>: the message, and <sender>: who sent the broadcast.
+Broadcast-Command-Format: '&6&l%sender% has broadcasted: &7&l%message%'
+
+#Message sent to a player if they do not have permission to use a command.
+No-Permission: '&cYou do not have permission to use this command.'
+
+#The interval at which the messages are broadcasted. (In ticks)
+Interval: 1000
+
+#Define your broadcasts here.
+Broadcasts:
+
+  #Name of the broadcast, can be anything.
+  Hey:
+    #Sound players here when the broadcast is played, if you wish for no sound, leave null
+    Sound: BLOCK_SLIME_STEP
+
+    #Permission needed to see and here the broadcast, if you wish for no permission, leave null
+    Permission: 'hey.see'
+
+    #Messages sent to players.
+    Messages:
+     - '&0&m====='
+     - ' &a&lHey! '
+     - '&0&m====='

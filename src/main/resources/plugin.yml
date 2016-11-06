@@ -1,0 +1,13 @@
+name: AutoBroadcast
+main: net.nikdev.autobroadcast.AutoBroadcast
+version: 1.8-SNAPSHOT
+author: NikDev
+website: http://nikdev.net/
+commands:
+  broadcast:
+    aliases: [broad, b]
+
+permissions:
+  autobroadcast.broadcast:
+    description: Allows you to broadcast messages.
+    default: op
