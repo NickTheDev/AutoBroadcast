@@ -11,12 +11,11 @@ public class AutoBroadcast extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("Created by NikDev, " + getDescription().getWebsite());
+        getLogger().info("Created by NickTheDev, " + getDescription().getWebsite());
 
         broadCastManager = new BroadCastManager(this);
 
         getCommand("broadcast").setExecutor(new BroadCastCommand(this));
-
     }
 
     public BroadCastManager getBroadCastManager() {

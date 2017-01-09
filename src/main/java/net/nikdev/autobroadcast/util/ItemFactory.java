@@ -6,48 +6,52 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
-public class ItemFactory {
+import static net.nikdev.autobroadcast.util.Conditions.orElse;
 
-    private final ItemStack wrappedItemStack;
+public final class ItemFactory {
+
+    private final ItemStack item;
 
     public ItemFactory(Material material) {
-        wrappedItemStack = new ItemStack(material);
+        this(material, 1);
     }
 
     public ItemFactory(Material material, int amount) {
-        wrappedItemStack = new ItemStack(material, amount);
+        item = new ItemStack(orElse(material, Material.AIR), amount);
     }
 
-    public ItemFactory withName(String name) {
-        ItemMeta meta = wrappedItemStack.getItemMeta();
-        meta.setDisplayName(Color.c(name));
-        wrappedItemStack.setItemMeta(meta);
+    public ItemFactory name(String name) {
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(Color.color(name));
+        item.setItemMeta(meta);
 
         return this;
     }
 
-    public ItemFactory withAmount(int amount) {
-        wrappedItemStack.setAmount(amount);
+    public ItemFactory amount(int amount) {
+        item.setAmount(amount);
 
         return this;
     }
 
-    public ItemFactory withEnchantment(Enchantment enchant) {
-        wrappedItemStack.addUnsafeEnchantment(enchant, 1);
+    public ItemFactory enchant(Enchantment enchant) {
+        item.addUnsafeEnchantment(orElse(enchant, Enchantment.DURABILITY), 1);
 
         return this;
     }
 
-    public ItemFactory withLore(List<String> lore) {
-        ItemMeta meta = wrappedItemStack.getItemMeta();
-        meta.setLore(Color.c(lore));
-        wrappedItemStack.setItemMeta(meta);
+    public ItemFactory lore(List<String> lore) {
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setLore(Color.color(lore));
+        item.setItemMeta(meta);
 
         return this;
     }
 
-    public ItemStack build() {
-        return wrappedItemStack;
+    public ItemStack create() {
+        return item.clone();
     }
 
 }

@@ -1,13 +1,15 @@
 name: AutoBroadcast
 main: net.nikdev.autobroadcast.AutoBroadcast
-version: 1.8-SNAPSHOT
-author: NikDev
+version: 1.9-SNAPSHOT
+author: NickTheDev
 website: http://nikdev.net/
+
 commands:
   broadcast:
-    aliases: [broad, b]
+    aliases: [broadc, bcast, bc]
+    description: Broadcasts the specified messages.
 
 permissions:
   autobroadcast.broadcast:
-    description: Allows you to broadcast messages.
+    description: Allows you to use /broadcast.
     default: op

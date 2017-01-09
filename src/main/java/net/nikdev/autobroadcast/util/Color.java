@@ -2,17 +2,22 @@ package net.nikdev.autobroadcast.util;
 
 import org.bukkit.ChatColor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Color {
+import static net.nikdev.autobroadcast.util.Conditions.orElse;
 
-    public static String c(String s) {
-        return ChatColor.translateAlternateColorCodes('&', s);
+public final class Color {
+
+    private Color() {}
+
+    public static String color(String message) {
+        return ChatColor.translateAlternateColorCodes('&', orElse(message, ""));
     }
 
-    public static List<String> c(List<String> s) {
-        return s.stream().map(Color::c).collect(Collectors.toList());
+    public static List<String> color(List<String> messages) {
+        return orElse(messages, new ArrayList<String>()).stream().map(Color::color).collect(Collectors.toList());
     }
 
 }

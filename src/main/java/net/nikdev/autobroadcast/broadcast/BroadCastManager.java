@@ -12,20 +12,23 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
+import static net.nikdev.autobroadcast.util.Conditions.notNull;
+
 public class BroadCastManager {
 
+    private static final Random RANDOM = new Random();
+
     private final AutoBroadcast plugin;
-    private List<BroadCast> broadcasts = new ArrayList<>();
+    private final List<Broadcast> broadcasts = new ArrayList<>();
 
     public BroadCastManager(AutoBroadcast plugin) {
         this.plugin = plugin;
 
         load();
-        runTimer();
-
+        createTimer();
     }
 
-    public List<BroadCast> getBroadcasts() {
+    public List<Broadcast> getTimedBroadcasts() {
         return Collections.unmodifiableList(broadcasts);
     }
 
@@ -33,129 +36,101 @@ public class BroadCastManager {
         ConfigurationSection section = plugin.getConfig().getConfigurationSection("Broadcasts");
 
         if(section != null && !section.getKeys(false).isEmpty()) {
-            section.getKeys(false).stream().forEach(key -> {
+            section.getKeys(false).forEach(key -> {
                 ConfigurationSection broadcast = section.getConfigurationSection(key);
 
-                List<String> messagesStr = broadcast.getStringList("Messages");
-                List<String> messages = new ArrayList<>();
+                Sound sound = null;
 
-                if(messagesStr != null && !messagesStr.isEmpty()) {
-                    messages = messagesStr;
-                }
+                if(notNull(broadcast.getString("Sound"))) {
+                    try {
+                        sound = Sound.valueOf(broadcast.getString("Sound"));
 
-                String soundStr = broadcast.getString("Sound");
-                Optional<Sound> sound;
+                    } catch(IllegalArgumentException ignored) {}
 
-                try {
-                    sound = Optional.of(Sound.valueOf(soundStr));
-
-                } catch(Exception e) {
-                    sound = Optional.empty();
                 }
 
                 List<ItemFactory> items = new ArrayList<>();
                 ConfigurationSection itemsSection = broadcast.getConfigurationSection("Items");
 
                 if(itemsSection != null && !itemsSection.getKeys(false).isEmpty()) {
-                    itemsSection.getKeys(false).stream().forEach(itemKey -> {
+                    itemsSection.getKeys(false).forEach(itemKey -> {
                         ConfigurationSection itemSection = itemsSection.getConfigurationSection(itemKey);
 
-                        ItemFactory item;
+                        ItemFactory item = new ItemFactory(Material.matchMaterial(itemSection.getString("Type")), itemSection.getInt("Amount"));
 
-                        try {
-                            item = new ItemFactory(Material.matchMaterial(itemSection.getString("Type")), itemSection.getInt("Amount"));
-
-                        } catch(Exception e) {
-                            item = new ItemFactory(Material.STONE);
-                        }
-
-                        List<String> lore = itemSection.getStringList("Lore");
-
-                        if(lore != null && !lore.isEmpty()) {
-                            item.withLore(lore);
-                        }
-
+                        item.lore(itemSection.getStringList("Lore"));
                         List<String> enchants = itemSection.getStringList("Enchantments");
 
                         if (enchants != null && !enchants.isEmpty()) {
-                            final ItemFactory enchantItem = item;
-
-                            enchants.stream().filter(enchantKey -> Enchantment.getByName(enchantKey) != null).forEach(enchantKey -> enchantItem.withEnchantment(Enchantment.getByName(enchantKey)));
+                            enchants.stream().filter(enchantKey -> Enchantment.getByName(enchantKey) != null).forEach(enchantKey -> item.enchant(Enchantment.getByName(enchantKey)));
                         }
 
                         items.add(item);
-
                     });
 
                 }
 
-                broadcasts.add(new BroadCast(messages, items, Optional.ofNullable(broadcast.getString("permission")), sound));
-
+                broadcasts.add(new Broadcast(broadcast.getStringList("Messages"), items, broadcast.getString("permission"), sound));
             });
         }
 
-        plugin.getLogger().info(getBroadcasts().size() + " Broadcast(s) loaded successfully!");
+        plugin.getLogger().info(getTimedBroadcasts().size() + " Broadcast(s) loaded successfully!");
     }
 
-    public void runTimer() {
+    private void createTimer() {
         new BukkitRunnable() {
 
             @Override
             public void run() {
-                if (getBroadcasts().isEmpty()) {
+                if (getTimedBroadcasts().isEmpty()) {
                     this.cancel();
                 }
 
-                BroadCast broadcast;
-
-                if (getBroadcasts().size() == 1) {
-                    broadcast = getBroadcasts().get(0);
-
-                } else {
-                    broadcast = getBroadcasts().get(new Random().nextInt(getBroadcasts().size()));
-
-                }
-
-                broadcast(broadcast);
-
+                broadcast(getTimedBroadcasts().get(RANDOM.nextInt(getTimedBroadcasts().size())));
             }
 
         }.runTaskTimer(plugin, 1, plugin.getConfig().getInt("Interval"));
 
     }
 
-    public void broadcast(BroadCast broadcast) {
-        if(!broadcast.getPermission().isPresent()) {
-            broadcast.getMessages().stream().forEach(msg -> Bukkit.broadcastMessage(Color.c(msg)));
-
-            Bukkit.getOnlinePlayers().stream().forEach(p -> {
-                if (broadcast.getSound().isPresent()) {
-                    p.playSound(p.getLocation(),broadcast.getSound().get(), 1.0F, 0.0F);
+    public void broadcast(Broadcast broadcast) {
+        if(notNull(broadcast)) {
+            if(broadcast.getPermission().isPresent()) {
+                if(!broadcast.getMessages().isEmpty()) {
+                    broadcast.getMessages().forEach(message -> Bukkit.broadcast(Color.color(message), broadcast.getPermission().get()));
                 }
 
-                if (!broadcast.getItems().isEmpty()) {
-                    broadcast.getItems().stream().forEach(item -> p.getInventory().addItem(item.build()));
-                }
+                Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission(broadcast.getPermission().get())).forEach(p -> {
+                    if (broadcast.getSound().isPresent()) {
+                        p.playSound(p.getLocation(),broadcast.getSound().get(), 1.0F, 0.0F);
+                    }
 
-            });
+                    if (!broadcast.getItems().isEmpty()) {
+                        broadcast.getItems().forEach(item -> p.getInventory().addItem(item.create()));
+                    }
 
-        } else {
-            if(!broadcast.getMessages().isEmpty()) {
-                broadcast.getMessages().stream().forEach(msg -> Bukkit.broadcast(Color.c(msg), broadcast.getPermission().get()));
+                });
+
+                return;
             }
 
-            Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission(broadcast.getPermission().get())).forEach(p -> {
+            broadcast.getMessages().forEach(msg -> Bukkit.broadcastMessage(Color.color(msg)));
+
+            Bukkit.getOnlinePlayers().forEach(p -> {
                 if (broadcast.getSound().isPresent()) {
                     p.playSound(p.getLocation(),broadcast.getSound().get(), 1.0F, 0.0F);
                 }
 
                 if (!broadcast.getItems().isEmpty()) {
-                    broadcast.getItems().stream().forEach(item -> p.getInventory().addItem(item.build()));
+                    broadcast.getItems().forEach(item -> p.getInventory().addItem(item.create()));
                 }
 
             });
+
         }
 
     }
+
+
 
 }

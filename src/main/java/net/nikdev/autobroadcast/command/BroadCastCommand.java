@@ -1,16 +1,15 @@
 package net.nikdev.autobroadcast.command;
 
 import net.nikdev.autobroadcast.AutoBroadcast;
-import net.nikdev.autobroadcast.broadcast.BroadCast;
+import net.nikdev.autobroadcast.broadcast.Broadcast;
 import net.nikdev.autobroadcast.util.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 public class BroadCastCommand implements CommandExecutor {
 
@@ -21,29 +20,27 @@ public class BroadCastCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String string, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String string, String[] args) {
         if(!sender.hasPermission("autobroadcast.broadcast") || !sender.isOp()) {
-            sender.sendMessage(Color.c(plugin.getConfig().getString("No-Permission")));
+            sender.sendMessage(Color.color(plugin.getConfig().getString("No-Permission")));
 
             return false;
-
         }
 
         if (args.length == 0) {
-            sender.sendMessage(Color.c("&cNo arguments specified, do /broadcast <message>."));
+            sender.sendMessage(Color.color("&cNo messages specified, please use /broadcast <messages>."));
 
             return false;
-
         }
 
-        String format = plugin.getConfig().getString("Broadcast-Command-Format");
+        String format = Color.color(plugin.getConfig().getString("Broadcast-Command-Format"));
         StringBuilder message = new StringBuilder();
 
-        Arrays.stream(args).forEach(arg -> message.append(arg).append(" "));
+        Stream.of(args).forEach(arg -> message.append(arg).append(" "));
 
-        plugin.getBroadCastManager().broadcast(new BroadCast(Collections.singletonList(Color.c(format.replaceAll("%sender%", sender.getName()).replaceAll("%message%", message.toString()))), new ArrayList<>(), Optional.empty(), Optional.empty()));
+        plugin.getBroadCastManager().broadcast(new Broadcast(Collections.singletonList(Color.color(format.replaceAll("%sender%", sender instanceof ConsoleCommandSender ? "Console" : sender.getName()).replaceAll("%message%", message.toString()))), null, null, null));
 
-        return false;
+        return true;
     }
 
 }
