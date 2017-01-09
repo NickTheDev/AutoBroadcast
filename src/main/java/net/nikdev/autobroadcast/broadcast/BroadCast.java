@@ -3,39 +3,47 @@ package net.nikdev.autobroadcast.broadcast;
 import net.nikdev.autobroadcast.util.ItemFactory;
 import org.bukkit.Sound;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BroadCast {
+import static net.nikdev.autobroadcast.util.Conditions.isPresentCollection;
 
-    private List<String> messages;
-    private List<ItemFactory> items;
+public class Broadcast {
 
-    private Optional<String> permission;
-    private Optional<Sound> sound;
+    private final List<String> messages = new ArrayList<>();
+    private final List<ItemFactory> items = new ArrayList<>();
 
-    public BroadCast(List<String> messages, List<ItemFactory> items, Optional<String> permission, Optional<Sound> sound) {
-        this.messages = messages;
-        this.items = items;
+    private final String permission;
+    private final Sound sound;
+
+    public Broadcast(List<String> messages, List<ItemFactory> items, String permission, Sound sound) {
         this.permission = permission;
         this.sound = sound;
 
+        if(isPresentCollection(messages)) {
+            getMessages().addAll(messages);
+        }
+
+        if(isPresentCollection(items)) {
+            getItems().addAll(items);
+        }
     }
 
     public List<String> getMessages() {
         return messages;
     }
 
+    public List<ItemFactory> getItems() {
+        return items;
+    }
+
     public Optional<String> getPermission() {
-        return permission;
+        return Optional.ofNullable(permission);
     }
 
     public Optional<Sound> getSound() {
-        return sound;
-    }
-
-    public List<ItemFactory> getItems() {
-        return items;
+        return Optional.ofNullable(sound);
     }
 
 }
