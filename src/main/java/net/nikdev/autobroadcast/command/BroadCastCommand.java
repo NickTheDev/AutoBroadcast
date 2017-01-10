@@ -1,7 +1,7 @@
 package net.nikdev.autobroadcast.command;
 
 import net.nikdev.autobroadcast.AutoBroadcast;
-import net.nikdev.autobroadcast.broadcast.Broadcast;
+import net.nikdev.autobroadcast.broadcast.BroadCast;
 import net.nikdev.autobroadcast.util.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,7 +38,7 @@ public class BroadCastCommand implements CommandExecutor {
 
         Stream.of(args).forEach(arg -> message.append(arg).append(" "));
 
-        plugin.getBroadCastManager().broadcast(new Broadcast(Collections.singletonList(Chat.color(format.replaceAll("%sender%", sender instanceof ConsoleCommandSender ? "Console" : sender.getName()).replaceAll("%message%", message.toString()))), null, null, null));
+        plugin.getBroadCastManager().broadcast(new BroadCast(Collections.singletonList(Chat.color(format.replaceAll("%sender%", sender instanceof ConsoleCommandSender ? "Console" : sender.getName()).replaceAll("%message%", message.toString()))), null, null, null));
 
         return true;
     }

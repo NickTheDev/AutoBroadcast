@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import static net.nikdev.autobroadcast.util.Conditions.isPresentCollection;
 
-public class Broadcast {
+public class BroadCast {
 
     private final List<String> messages = new ArrayList<>();
     private final List<ItemFactory> items = new ArrayList<>();
@@ -17,7 +17,7 @@ public class Broadcast {
     private final String permission;
     private final Sound sound;
 
-    public Broadcast(List<String> messages, List<ItemFactory> items, String permission, Sound sound) {
+    public BroadCast(List<String> messages, List<ItemFactory> items, String permission, Sound sound) {
         this.permission = permission;
         this.sound = sound;
 

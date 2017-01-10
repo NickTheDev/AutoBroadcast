@@ -19,7 +19,7 @@ public class BroadCastManager {
     private static final Random RANDOM = new Random();
 
     private final AutoBroadcast plugin;
-    private final List<Broadcast> broadcasts = new ArrayList<>();
+    private final List<BroadCast> broadcasts = new ArrayList<>();
 
     public BroadCastManager(AutoBroadcast plugin) {
         this.plugin = plugin;
@@ -28,7 +28,7 @@ public class BroadCastManager {
         createTimer();
     }
 
-    public List<Broadcast> getTimedBroadcasts() {
+    public List<BroadCast> getTimedBroadcasts() {
         return Collections.unmodifiableList(broadcasts);
     }
 
@@ -70,7 +70,7 @@ public class BroadCastManager {
 
                 }
 
-                broadcasts.add(new Broadcast(broadcast.getStringList("Messages"), items, broadcast.getString("permission"), sound));
+                broadcasts.add(new BroadCast(broadcast.getStringList("Messages"), items, broadcast.getString("permission"), sound));
             });
         }
 
@@ -93,7 +93,7 @@ public class BroadCastManager {
 
     }
 
-    public void broadcast(Broadcast broadcast) {
+    public void broadcast(BroadCast broadcast) {
         if(notNull(broadcast)) {
             if(broadcast.getPermission().isPresent()) {
                 if(!broadcast.getMessages().isEmpty()) {
