@@ -23,7 +23,7 @@ public final class ItemFactory {
     public ItemFactory name(String name) {
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(Color.color(name));
+        meta.setDisplayName(Chat.color(name));
         item.setItemMeta(meta);
 
         return this;
@@ -44,7 +44,7 @@ public final class ItemFactory {
     public ItemFactory lore(List<String> lore) {
         ItemMeta meta = item.getItemMeta();
 
-        meta.setLore(Color.color(lore));
+        meta.setLore(Chat.color(lore));
         item.setItemMeta(meta);
 
         return this;

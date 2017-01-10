@@ -1,7 +1,7 @@
 package net.nikdev.autobroadcast.broadcast;
 
 import net.nikdev.autobroadcast.AutoBroadcast;
-import net.nikdev.autobroadcast.util.Color;
+import net.nikdev.autobroadcast.util.Chat;
 import net.nikdev.autobroadcast.util.ItemFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -97,7 +97,7 @@ public class BroadCastManager {
         if(notNull(broadcast)) {
             if(broadcast.getPermission().isPresent()) {
                 if(!broadcast.getMessages().isEmpty()) {
-                    broadcast.getMessages().forEach(message -> Bukkit.broadcast(Color.color(message), broadcast.getPermission().get()));
+                    broadcast.getMessages().forEach(message -> Bukkit.broadcast(Chat.color(message), broadcast.getPermission().get()));
                 }
 
                 Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission(broadcast.getPermission().get())).forEach(p -> {
@@ -114,7 +114,7 @@ public class BroadCastManager {
                 return;
             }
 
-            broadcast.getMessages().forEach(msg -> Bukkit.broadcastMessage(Color.color(msg)));
+            broadcast.getMessages().forEach(msg -> Bukkit.broadcastMessage(Chat.color(msg)));
 
             Bukkit.getOnlinePlayers().forEach(p -> {
                 if (broadcast.getSound().isPresent()) {
