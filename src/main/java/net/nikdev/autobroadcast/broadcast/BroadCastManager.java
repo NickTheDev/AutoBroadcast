@@ -1,5 +1,5 @@
 /*
-Copyright 2017 NickTheDev
+Copyright 2017 NickTheDev <http://nikdev.net/>
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ Copyright 2017 NickTheDev
 package net.nikdev.autobroadcast.broadcast;
 
 import net.nikdev.autobroadcast.AutoBroadcast;
+import net.nikdev.autobroadcast.event.BroadCastEvent;
 import net.nikdev.autobroadcast.util.Chat;
 import net.nikdev.autobroadcast.util.ItemFactory;
 import org.bukkit.Bukkit;
@@ -36,6 +37,8 @@ public class BroadCastManager {
     private final AutoBroadcast plugin;
     private final List<BroadCast> broadcasts = new ArrayList<>();
 
+    private boolean enabled = true;
+
     public BroadCastManager(AutoBroadcast plugin) {
         this.plugin = plugin;
 
@@ -45,6 +48,14 @@ public class BroadCastManager {
 
     public List<BroadCast> getTimedBroadcasts() {
         return Collections.unmodifiableList(broadcasts);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void toggle() {
+        this.enabled = !enabled;
     }
 
     private void load() {
@@ -109,7 +120,15 @@ public class BroadCastManager {
     }
 
     public void broadcast(BroadCast broadcast) {
-        if(notNull(broadcast)) {
+        if(notNull(broadcast) && isEnabled()) {
+            BroadCastEvent event = new BroadCastEvent(broadcast);
+
+            Bukkit.getPluginManager().callEvent(event);
+
+            if(event.isCancelled()) {
+                return;
+            }
+
             if(broadcast.getPermission().isPresent()) {
                 if(!broadcast.getMessages().isEmpty()) {
                     broadcast.getMessages().forEach(message -> Bukkit.broadcast(Chat.color(message), broadcast.getPermission().get()));

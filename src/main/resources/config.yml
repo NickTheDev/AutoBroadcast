@@ -1,6 +1,10 @@
 #Format used when a player uses /broadcast. Placeholders are %message% ; the message, and %sender% ; who sent the broadcast.
 Broadcast-Command-Format: '&b&lServer&c&lBroadcaster &8&l> &f%sender% &7has broadcasted: &f%message%'
 
+#Message sent to a player when they use /broadcasttoggle. Placeholders are %toggle% ; State of broadcasts, will be
+# 'no longer' if broadcasting is turned off, and 'now' if broadcasting is turned on.
+Broadcast-Toggle: '&b&lServer&c&lBroadcaster &8&l> Broadcasts will %toggle% dispatch.'
+
 #Message sent to a player if they do not have permission to use the command /broadcast.
 No-Permission: '&cYou do not have permission to use this command.'
 

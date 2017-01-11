@@ -1,5 +1,5 @@
 /*
-Copyright 2017 NickTheDev
+Copyright 2017 NickTheDev <http://nikdev.net/>
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package net.nikdev.autobroadcast;
 
 import net.nikdev.autobroadcast.broadcast.BroadCastManager;
 import net.nikdev.autobroadcast.command.BroadCastCommand;
+import net.nikdev.autobroadcast.command.BroadCastToggleCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AutoBroadcast extends JavaPlugin {
@@ -31,6 +32,7 @@ public class AutoBroadcast extends JavaPlugin {
         broadCastManager = new BroadCastManager(this);
 
         getCommand("broadcast").setExecutor(new BroadCastCommand(this));
+        getCommand("broadcasttoggle").setExecutor(new BroadCastToggleCommand(this));
     }
 
     public BroadCastManager getBroadCastManager() {
