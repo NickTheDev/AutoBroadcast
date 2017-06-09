@@ -1,11 +1,14 @@
-#Format used when a player uses /broadcast. Placeholders are %message% ; the message, and %sender% ; who sent the broadcast.
+#Format used when a player uses /autobroadcast. Placeholders are %message% ; the message, and %sender% ; who sent the broadcast.
 Broadcast-Command-Format: '&b&lServer&c&lBroadcaster &8&l> &f%sender% &7has broadcasted: &f%message%'
 
-#Message sent to a player when they use /broadcasttoggle. Placeholders are %toggle% ; State of broadcasts, will be
+#Message sent to a player when they use /autobroadcasttoggle. Placeholders are %toggle% ; State of broadcasts, will be
 # 'no longer' if broadcasting is turned off, and 'now' if broadcasting is turned on.
 Broadcast-Toggle: '&b&lServer&c&lBroadcaster &8&l> Broadcasts will %toggle% dispatch.'
 
-#Message sent to a player if they do not have permission to use the command /broadcast.
+#Message sent to a player when they use /autobroadcastreload
+Broadcast-Reload: '&b&lServer&c&lBroadcaster &8&l> Auto Broadcast config has been reloaded!'
+
+#Message sent to a player if they do not have permission to use the command /autobroadcast.
 No-Permission: '&cYou do not have permission to use this command.'
 
 #The interval at which the broadcasts are dispatched. (In ticks)
@@ -16,10 +19,10 @@ Broadcasts:
 
   #Name of the broadcast, can be anything.
   Hey:
-    #Sound players here when the broadcast is played, if you wish for no sound, leave null
+    #Sound players here when the broadcast is played, if you wish for no sound, leave blank
     Sound: BLOCK_SLIME_STEP
 
-    #Permission needed to see and here the broadcast, if you wish for no permission, leave null
+    #Permission needed to see and here the broadcast, if you wish for no permission, leave blank
     Permission: 'hey.see'
 
     #Messages sent to players.

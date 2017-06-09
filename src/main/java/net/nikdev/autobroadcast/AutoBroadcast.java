@@ -17,6 +17,7 @@ package net.nikdev.autobroadcast;
 
 import net.nikdev.autobroadcast.broadcast.BroadCastManager;
 import net.nikdev.autobroadcast.command.BroadCastCommand;
+import net.nikdev.autobroadcast.command.BroadCastReloadCommand;
 import net.nikdev.autobroadcast.command.BroadCastToggleCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,8 +32,9 @@ public class AutoBroadcast extends JavaPlugin {
 
         broadCastManager = new BroadCastManager(this);
 
-        getCommand("broadcast").setExecutor(new BroadCastCommand(this));
-        getCommand("broadcasttoggle").setExecutor(new BroadCastToggleCommand(this));
+        getCommand("autobroadcast").setExecutor(new BroadCastCommand(this));
+        getCommand("autobroadcasttoggle").setExecutor(new BroadCastToggleCommand(this));
+        getCommand("autobroadcastreload").setExecutor(new BroadCastReloadCommand(this));
     }
 
     public BroadCastManager getBroadCastManager() {

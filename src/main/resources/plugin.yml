@@ -1,21 +1,27 @@
 name: AutoBroadcast
 main: net.nikdev.autobroadcast.AutoBroadcast
-version: 2.0-SNAPSHOT
+version: 2.1-SNAPSHOT
 author: NickTheDev
 website: http://nikdev.net/
 
 commands:
-  broadcast:
-    aliases: [broadc, bcast, bc]
+  autobroadcast:
+    aliases: [autobroadc, abcast, abc]
     description: Broadcasts the specified messages.
-  broadcasttoggle:
-    aliases: [broadcastt, togglebroadcast, bct]
+  autobroadcasttoggle:
+    aliases: [autobroadt, abtoggle, abt]
     description: Toggles whether or not timed broadcasts are dispatched.
+  autobroadcastreload:
+    aliases: [autobroadr, abreload, abr]
+    description: Reloads the plugin config.
 
 permissions:
   autobroadcast.broadcast:
-    description: Allows you to use /broadcast.
+    description: Allows you to use /autobroadcast.
     default: op
   autobroadcast.toggle:
-    description: Allows you do use /broadcasttoggle
+    description: Allows you do use /autobroadcasttoggle
+    default: op
+  autobroadcast.reload:
+    description: Allows you do use /autobroadcastreload
     default: op

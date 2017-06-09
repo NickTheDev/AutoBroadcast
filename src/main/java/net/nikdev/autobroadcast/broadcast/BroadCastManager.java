@@ -38,12 +38,12 @@ public class BroadCastManager {
     private final List<BroadCast> broadcasts = new ArrayList<>();
 
     private boolean enabled = true;
+    private boolean reset;
 
     public BroadCastManager(AutoBroadcast plugin) {
         this.plugin = plugin;
 
         load();
-        createTimer();
     }
 
     public List<BroadCast> getTimedBroadcasts() {
@@ -58,7 +58,10 @@ public class BroadCastManager {
         this.enabled = !enabled;
     }
 
-    private void load() {
+    public void load() {
+        reset = true;
+        broadcasts.clear();
+
         ConfigurationSection section = plugin.getConfig().getConfigurationSection("Broadcasts");
 
         if(section != null && !section.getKeys(false).isEmpty()) {
@@ -101,6 +104,9 @@ public class BroadCastManager {
         }
 
         plugin.getLogger().info(getTimedBroadcasts().size() + " Broadcast(s) loaded successfully!");
+
+        reset = false;
+        createTimer();
     }
 
     private void createTimer() {
@@ -108,8 +114,16 @@ public class BroadCastManager {
 
             @Override
             public void run() {
+                if(reset) {
+                    this.cancel();
+
+                    return;
+                }
+
                 if (getTimedBroadcasts().isEmpty()) {
                     this.cancel();
+
+                    return;
                 }
 
                 broadcast(getTimedBroadcasts().get(RANDOM.nextInt(getTimedBroadcasts().size())));

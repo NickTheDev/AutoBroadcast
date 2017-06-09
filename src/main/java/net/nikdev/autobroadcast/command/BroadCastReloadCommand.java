@@ -21,24 +21,26 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class BroadCastToggleCommand implements CommandExecutor {
+public class BroadCastReloadCommand implements CommandExecutor {
 
     private final AutoBroadcast plugin;
 
-    public BroadCastToggleCommand(AutoBroadcast plugin) {
+    public BroadCastReloadCommand(AutoBroadcast plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args) {
-        if(!sender.hasPermission("autobroadcast.toggle")) {
+        if(!sender.hasPermission("autobroadcast.reload")) {
             sender.sendMessage(Chat.color(plugin.getConfig().getString("No-Permission")));
 
             return false;
         }
 
-        plugin.getBroadCastManager().toggle();
-        sender.sendMessage(Chat.color(plugin.getConfig().getString("Broadcast-Toggle").replaceAll("%toggle%", plugin.getBroadCastManager().isEnabled() ? "now" : "no longer")));
+        plugin.reloadConfig();
+        plugin.getBroadCastManager().load();
+
+        sender.sendMessage(Chat.color(plugin.getConfig().getString("Broadcast-Reload")));
 
         return true;
     }

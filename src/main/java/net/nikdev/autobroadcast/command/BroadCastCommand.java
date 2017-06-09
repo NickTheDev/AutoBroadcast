@@ -36,7 +36,7 @@ public class BroadCastCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String string, String[] args) {
-        if(!sender.hasPermission("autobroadcast.broadcast") || !sender.isOp()) {
+        if(!sender.hasPermission("autobroadcast.broadcast")) {
             sender.sendMessage(Chat.color(plugin.getConfig().getString("No-Permission")));
 
             return false;
