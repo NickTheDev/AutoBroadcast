@@ -1,32 +1,129 @@
-#Format used when a player uses /autobroadcast. Placeholders are %message% ; the message, and %sender% ; who sent the broadcast.
-Broadcast-Command-Format: '&b&lServer&c&lBroadcaster &8&l> &f%sender% &7has broadcasted: &f%message%'
+########################################################################################
+#                                                                                      #
+#                           Auto broadcast plugin config.                              #
+#                               Created by NickTheDev                                  #
+#                                                                                      #
+#   Define your custom broadcasts in this file. A guide on all of the custom options   #
+#   for broadcasts and how to define them can be found on the spigot resource page.    #
+#   All text fields support chat color codes with the '&' symbol.                      #
+#                                                                                      #
+########################################################################################
 
-#Message sent to a player when they use /autobroadcasttoggle. Placeholders are %toggle% ; State of broadcasts, will be
-# 'no longer' if broadcasting is turned off, and 'now' if broadcasting is turned on.
-Broadcast-Toggle: '&b&lServer&c&lBroadcaster &8&l> Broadcasts will %toggle% dispatch.'
+# DO NOT CHANGE
+# Info created by the plugin about what plugin this config this version supports.
+# In future updates new changes may be added that break old config past a certain
+# version require and require their user to delete their unsupported old config
+# and let the plugin generate a new one.
+config-version: 3.0
 
-#Message sent to a player when they use /autobroadcastreload
-Broadcast-Reload: '&b&lServer&c&lBroadcaster &8&l> Auto Broadcast config has been reloaded!'
+# Interval that defines how often broadcasts are scheduled.
+# The interval is in SECONDS, meaning the default 60 represents 60 seconds or one minute.
+interval: 60
 
-#Message sent to a player if they do not have permission to use the command /autobroadcast.
-No-Permission: '&cYou do not have permission to use this command.'
+# Whether or not the scheduler should allow repeats in broadcasting.
+# If this is true, randomly generated broadcasts may repeat as with normal random numbers.
+# If this is false, broadcasts will never repeat until each unique broadcast has been shown.
+allow-repeats: true
 
-#The interval at which the broadcasts are dispatched. (In ticks)
-Interval: 1000
+# List of your custom broadcasts!
+# Below are some starter templates that show how to use custom properties on broadcasts.
+# Feel free to add, remove, or change these templates as they are intended only to help
+# you get started. Please see the spigot resource page for a full guide for how to define them.
+#
+# Each broadcast may specify the following fields:
+# messages: String list (Supports color codes)
+# sound: Sound type (Choose from this link: https://bit.ly/2Tn1nvs)
+# worlds: String list (Must be valid worlds)
+# title: String (Supports color)
+# subtitle: String (Supports color)
+# permission: String (Should be a real permission)
+# items: Item list
+#
+# Each item may specify the following fields:
+# type: Material type (Choose from this link: https://bit.ly/2TzIJj0)
+# name: String (Supports color codes)
+# amount: Number (Must be greater than 0)
+# lore: String list (Supports color codes)
+broadcasts:
 
-#Define your broadcasts here.
-Broadcasts:
+  # Template for a bare bones broadcast that only sends chat messages, feel free to remove.
+  MessageOnlyTemplate:
 
-  #Name of the broadcast, can be anything.
-  Hey:
-    #Sound players here when the broadcast is played, if you wish for no sound, leave blank
-    Sound: BLOCK_SLIME_STEP
+    # Chat messages that this broadcast will send.
+    messages:
+      - '&c&lWhat is up!'
+      - '&a&lGood morning.'
 
-    #Permission needed to see and here the broadcast, if you wish for no permission, leave blank
-    Permission: 'hey.see'
+  # Template for a bare bones broadcast that only sends chat messages to players with a certain permission, feel free to remove.
+  PermissionRequiredTemplate:
 
-    #Messages sent to players.
-    Messages:
-     - '&0&m====='
-     - ' &a&lHey! '
-     - '&0&m====='
+    # Chat messages that this broadcast will send.
+    messages:
+      - '&0&lReally nice weather today.'
+
+    # Permission required for a player to be able to view this broadcast.
+    permission: 'permission.needed'
+
+  # Template for a bare bones broadcast that sends chat messages and plays a sound, feel free to remove.
+  SoundPlayedTemplate:
+
+    # Chat messages that this broadcast will send.
+    messages:
+      - '&c&lWhat is up!'
+      - '&a&lGood morning.'
+
+    # Sound that this broadcast will play for players.
+    sound: ANVIL_LAND
+
+  # Template for a broadcast that doesn't send chat messages and just title animations, feel free to remove.
+  TitleOnlyTemplate:
+
+    # Title displayed to all players.
+    title: '&c&lWhat is up!'
+
+    # Subtitle displayed to all players.
+    subtitle: '&a7lGood morning.'
+
+  # Template for a broadcast that only displays to players in certain worlds, feel free to remove.
+  WorldSpecificTemplate:
+
+    # Chat messages that this broadcast will send.
+    messages:
+      - '&c&lWhat is up!'
+      - '&a&lGood morning.'
+
+    # Worlds the broadcast will show in, in this case exclusively the nether.
+    worlds:
+      - 'world_nether'
+
+  GiveItemsTemplate:
+
+    # Chat messages that this broadcast will send.
+    messages:
+      - '&dGreat day today!'
+
+    # Items that are given to all players.
+    items:
+
+      FirstItem:
+        # Material type.
+        type: BAKED_POTATO
+
+        # Item name.
+        name: '&c&lPotato'
+
+        # Amount of the item.
+        amount: 5
+
+        # Lore of the item.
+        lore:
+          - '&8Really cool potato.'
+
+      SecondItem:
+        # Material type.
+        type: APPLE
+
+        # Amount of the item.
+        amount: 10
+
+

@@ -1,27 +1,36 @@
 name: AutoBroadcast
-main: net.nikdev.autobroadcast.AutoBroadcast
-version: 2.1-SNAPSHOT
+prefix: Auto Broadcast
+main: com.nickthedev.broadcasting.Broadcasting
+version: 3.0
 author: NickTheDev
-website: http://nikdev.net/
+website: https://www.spigotmc.org/resources/auto-broadcast.28230/
 
 commands:
   autobroadcast:
-    aliases: [autobroadc, abcast, abc]
-    description: Broadcasts the specified messages.
-  autobroadcasttoggle:
-    aliases: [autobroadt, abtoggle, abt]
-    description: Toggles whether or not timed broadcasts are dispatched.
-  autobroadcastreload:
-    aliases: [autobroadr, abreload, abr]
-    description: Reloads the plugin config.
+    aliases: [ab]
+    description: Base command of the Auto Broadcast plugin.
 
 permissions:
-  autobroadcast.broadcast:
-    description: Allows you to use /autobroadcast.
+  autobroadcast.*:
+    children:
+      autobroadcast.say: true
+      autobroadcast.toggle: true
+      autobroadcast.reload: true
+      autobroadcast.help: true
+      autobroadcast.version: true
+
+  autobroadcast.say:
+    description: Allows you to broadcast a message.
     default: op
   autobroadcast.toggle:
-    description: Allows you do use /autobroadcasttoggle
+    description: Allows you to toggle the state of broadcasts.
     default: op
   autobroadcast.reload:
-    description: Allows you do use /autobroadcastreload
+    description: Allows you to reload the plugin config.
+    default: op
+  autobroadcast.help:
+    description: Allows you to access the help command.
+    default: op
+  autobroadcast.version:
+    description: Allows you to check the plugin version.
     default: op
