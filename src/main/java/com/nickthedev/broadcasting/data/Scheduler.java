@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -57,6 +58,8 @@ public class Scheduler {
 
     private final List<Broadcast> broadcasts = new ArrayList<>();
     private boolean muted, reset;
+    private boolean repeat = DEFAULT_REPEATS;
+    private int interval = DEFAULT_INTERVAL;
 
     /**
      * Gets if the broadcast scheduler is muted and therefor won't broadcast.
@@ -65,6 +68,33 @@ public class Scheduler {
      */
     public boolean isMuted() {
         return muted;
+    }
+
+    /**
+     * Gets the scheduler interval between broadcasts.
+     *
+     * @return Schedule interval.
+     */
+    public int getInterval() {
+        return interval;
+    }
+
+    /**
+     * Gets if the scheduler allows repeats.
+     *
+     * @return Repeat rule.
+     */
+    public boolean allowsRepeat() {
+        return repeat;
+    }
+
+    /**
+     * Unmodifiable getter for all loaded broadcasts, for possible future API purposes.
+     *
+     * @return Loaded broadcasts.
+     */
+    public List<Broadcast> getBroadcasts() {
+        return Collections.unmodifiableList(broadcasts);
     }
 
     /**
@@ -84,8 +114,6 @@ public class Scheduler {
     public void load(boolean first) {
         FileConfiguration config = Broadcasting.get().getConfig();
         ConfigurationSection section = config.getConfigurationSection("broadcasts");
-        boolean repeat = DEFAULT_REPEATS;
-        int interval = DEFAULT_INTERVAL;
 
         reset = !first;
         muted = false;
@@ -156,26 +184,34 @@ public class Scheduler {
                 broadcasts.add(new Broadcast(messages, worlds, items, permission, title, subtitle, sound));
             });
 
-            NumberSelector selector = new NumberSelector(repeat, broadcasts.size());
-            Broadcasting.get().getLogger().warning(broadcasts.size() + " broadcasts have been found in the plugin, creating the scheduler now.");
+            Broadcasting.get().getLogger().info(broadcasts.size() + " broadcasts have been found in the plugin, creating the scheduler now.");
 
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    if(reset) {
-                        cancel();
-                        reset = false;
-
-                        return;
-                    }
-
-                    broadcast(broadcasts.get(selector.next()));
-                }
-
-            }.runTaskTimer(Broadcasting.get(), 100, interval * 20);
+            if(first) {
+                schedule();
+            }
         }
 
+    }
+
+    private void schedule() {
+        NumberSelector selector = new NumberSelector(repeat, broadcasts.size());
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                if(reset) {
+                    reset = false;
+                    schedule();
+                    cancel();
+
+                    return;
+                }
+
+                broadcast(broadcasts.get(selector.next()));
+            }
+
+        }.runTaskTimer(Broadcasting.get(), 2, interval * 20);
     }
 
     /**

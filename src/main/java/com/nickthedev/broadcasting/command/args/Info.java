@@ -23,17 +23,20 @@ import com.nickthedev.broadcasting.util.Chat;
 import org.bukkit.command.CommandSender;
 
 /**
- * Argument that allows admins to check the plugin version.
+ * Argument that allows admins to check info about the broadcast schedule.
  *
  * @author NickTheDev
  * @since 3.0
  */
-@ArgInfo(name = "version", help = "Checks the plugin version.", permission = "autobroadcast.version")
-public class Version implements Argument {
+@ArgInfo(name = "info", help = "Displays info about the broadcast schedule.", permission = "autobroadcast.info")
+public class Info implements Argument {
 
     @Override
     public void execute(CommandSender sender, String[] args) throws CommandException {
-        Chat.to(sender, Chat.INFO, "You are currently running version &a&l" + Broadcasting.get().getDescription().getVersion() + "&f&l.");
+        Chat.to(sender, Chat.INFO, "Here's the schedule info:");
+        Chat.to(sender, "   &e&lBroadcast count: &a" + Broadcasting.get().getScheduler().getBroadcasts().size() + " &fhave been loaded.");
+        Chat.to(sender, "   &e&lInterval: &a" + Broadcasting.get().getScheduler().getInterval() + " &fseconds between each broadcast.");
+        Chat.to(sender, "   &e&lAllows repeats: &a" + Broadcasting.get().getScheduler().allowsRepeat() + "&f; whether or not repeats are allowed.");
     }
 
 }

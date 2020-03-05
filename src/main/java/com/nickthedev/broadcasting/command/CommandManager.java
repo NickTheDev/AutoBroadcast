@@ -15,10 +15,7 @@ Copyright 2020 NickTheDev
  */
 package com.nickthedev.broadcasting.command;
 
-import com.nickthedev.broadcasting.command.args.Reload;
-import com.nickthedev.broadcasting.command.args.Say;
-import com.nickthedev.broadcasting.command.args.Toggle;
-import com.nickthedev.broadcasting.command.args.Version;
+import com.nickthedev.broadcasting.command.args.*;
 import com.nickthedev.broadcasting.util.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,7 +39,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
      * Creates a new command manager and registers all default arguments.
      */
     public CommandManager() {
-        Arrays.asList(new Help(), new Say(), new Reload(), new Toggle(), new Version()).forEach(this::register);
+        Arrays.asList(new Help(), new Say(), new Reload(), new Toggle(), new Version(), new Info()).forEach(this::register);
     }
 
     /**

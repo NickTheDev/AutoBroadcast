@@ -1,7 +1,7 @@
 name: AutoBroadcast
 prefix: Auto Broadcast
 main: com.nickthedev.broadcasting.Broadcasting
-version: 3.0
+version: 3.1
 author: NickTheDev
 website: https://www.spigotmc.org/resources/auto-broadcast.28230/
 
@@ -33,4 +33,7 @@ permissions:
     default: op
   autobroadcast.version:
     description: Allows you to check the plugin version.
+    default: op
+  autobroadcast.info:
+    description: Allows you to check the schedule info.
     default: op
